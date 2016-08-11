@@ -28,14 +28,19 @@ public class Main
 	 * @throws JAXBException
 	 */
 
-	public static Student readStudent(File studentContactFile, JAXBContext jaxb) throws JAXBException
+	public static Student readStudent(File studentContactFile, JAXBContext jaxb)
 	{
-		Unmarshaller unMarsh = jaxb.createUnmarshaller();
-		Contact stuCon = (Contact) unMarsh.unmarshal(studentContactFile);
-
+		Contact stuCon = new Contact();
+		try
+		{
+			stuCon = (Contact) jaxb.createUnmarshaller().unmarshal(studentContactFile);
+		}
+		catch (JAXBException e)
+		{
+			e.printStackTrace();
+		}
 		Student stu = new Student();
 		stu.setContact(stuCon);
-
 		return stu;
 	}
 
@@ -51,7 +56,7 @@ public class Main
 	 *         in the given directory
 	 * @throws JAXBException
 	 */
-	public static List<Student> readStudents(File studentDirectory, JAXBContext jaxb) throws JAXBException
+	public static List<Student> readStudents(File studentDirectory, JAXBContext jaxb)
 	{
 		List<Student> stuList = new ArrayList<>();
 
@@ -81,16 +86,22 @@ public class Main
 	 *         in the given file
 	 * @throws JAXBException
 	 */
-	public static Instructor readInstructor(File instructorContactFile, JAXBContext jaxb) throws JAXBException
+	public static Instructor readInstructor(File instructorContactFile, JAXBContext jaxb)
 	{
 		Instructor ins = new Instructor();
-
-		Unmarshaller unMarsh = jaxb.createUnmarshaller();
-		Contact insCon = (Contact) unMarsh.unmarshal(instructorContactFile);
+		Contact insCon = new Contact();
+		try
+		{
+			insCon = (Contact) jaxb.createUnmarshaller().unmarshal(instructorContactFile);
+		}
+		catch (JAXBException e)
+		{
+			e.printStackTrace();
+		}
 
 		ins.setContact(insCon);
 
-		return ins; // TODO
+		return ins;
 	}
 
 	/**
@@ -111,23 +122,29 @@ public class Main
 	 *         directory
 	 * @throws JAXBException
 	 */
-	public static Session readSession(File rootDirectory, JAXBContext jaxb) throws JAXBException
+	public static Session readSession(File rootDirectory, JAXBContext jaxb)
 	{
-		JAXBContext con = JAXBContext.newInstance(Contact.class);
+		JAXBContext con = null;
+		try
+		{
+			con = JAXBContext.newInstance(Contact.class);
+		}
+		catch (JAXBException e)
+		{
+			e.printStackTrace();
+		}
 		Session sess = new Session();
 		File[] listOfFiles;
 
 		if (rootDirectory.isDirectory())
 		{
 			sess.setLocation(rootDirectory.getName());
-
 			listOfFiles = rootDirectory.listFiles();
 
 			for (int i = 0; i < listOfFiles.length; i++)
 			{
 				if (listOfFiles[i].isDirectory())
 				{
-					System.out.println(listOfFiles[i].getName());
 					sess.setStartDate(listOfFiles[i].getName());
 					rootDirectory = listOfFiles[i];
 				}
@@ -144,12 +161,9 @@ public class Main
 				}
 			}
 			sess.setStudents(readStudents(rootDirectory, con));
-
 		}
-
-		System.out.println(sess);
-
-		return sess; // TODO
+//		System.out.println(sess);
+		return sess;
 	}
 
 	/**
@@ -163,10 +177,16 @@ public class Main
 	 *            the JAXB context to use
 	 * @throws JAXBException
 	 */
-	public static void writeSession(Session session, File sessionFile, JAXBContext jaxb) throws JAXBException
+	public static void writeSession(Session session, File sessionFile, JAXBContext jaxb)
 	{
-		Marshaller marsh = jaxb.createMarshaller();
-		marsh.marshal(session, sessionFile);
+		try
+		{
+			jaxb.createMarshaller().marshal(session, sessionFile);
+		}
+		catch (JAXBException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -189,9 +209,17 @@ public class Main
 	 * 
 	 * @throws JAXBException
 	 */
-	public static void main(String[] args) throws JAXBException
+	public static void main(String[] args)
 	{
-		JAXBContext sesContext = JAXBContext.newInstance(Session.class);
-		writeSession(readSession(new File("input/memphis"), sesContext),new File("output/session.xml"), sesContext );
+		JAXBContext sesContext;
+		try
+		{
+			sesContext = JAXBContext.newInstance(Session.class);
+			writeSession(readSession(new File("input/memphis"), sesContext), new File("output/session.xml"), sesContext);
+		}
+		catch (JAXBException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
