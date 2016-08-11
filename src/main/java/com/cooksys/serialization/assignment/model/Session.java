@@ -2,10 +2,23 @@ package com.cooksys.serialization.assignment.model;
 
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Session {
+	@XmlAttribute
     private String location;
+	@XmlAttribute(name = "start-date")
     private String startDate;
     private Instructor instructor;
+    @XmlElementWrapper
+    @XmlElement(name = "student")
     private List<Student> students;
 
     public String getLocation() {
@@ -39,4 +52,12 @@ public class Session {
     public void setStudents(List<Student> students) {
         this.students = students;
     }
+
+	@Override
+	public String toString()
+	{
+		return "Session [location=" + location + ",\n startDate=" + startDate + ",\n instructor=" + instructor.getContact() + ",\n students=" + students + "]";
+	}
+    
+    
 }

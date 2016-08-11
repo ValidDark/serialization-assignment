@@ -10,4 +10,10 @@ public class Student {
     public void setContact(Contact contact) {
         this.contact = contact;
     }
+
+	@Override
+	public String toString()
+	{
+		return contact.getFirstName() + " " + contact.getLastName() + "  " + contact.getEmail() + "  " + contact.getPhoneNumber();
+	}
 }
