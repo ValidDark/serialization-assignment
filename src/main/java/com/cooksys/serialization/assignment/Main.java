@@ -4,9 +4,6 @@ import com.cooksys.serialization.assignment.model.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +67,7 @@ public class Main
 				stuList.add(readStudent(stuFile, jaxb));
 			}
 		}
-		return stuList; // TODO
+		return stuList;
 	}
 
 	/**
